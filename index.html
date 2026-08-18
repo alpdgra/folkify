@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Folkify 😭 — put Folk on it</title>
+<meta name="description" content="Upload an image. It gets the word Folk and a randomly chosen pile of extremely weird emojis. That's the whole app." />
+<meta property="og:title" content="Folkify 😭" />
+<meta property="og:description" content="Upload an image, get Folk + cursed emojis." />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>😭</text></svg>" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<header class="topbar">
+  <h1 class="wordmark">FOLK<span class="tears">😭😭😭</span></h1>
+  <p class="tagline">Upload an image. It gets <strong>Folk</strong> and a randomly chosen pile of deeply unwell emojis.</p>
+</header>
+
+<main>
+  <section id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Upload an image">
+    <div class="dz-inner">
+      <div class="dz-emoji" id="dzEmoji">🖼️</div>
+      <p class="dz-title">Drop an image here</p>
+      <p class="dz-sub">or click to browse · or just paste (⌘/Ctrl+V)</p>
+    </div>
+    <input type="file" id="fileInput" accept="image/*" hidden />
+  </section>
+
+  <section id="stage" class="stage" hidden>
+    <div class="canvas-wrap">
+      <canvas id="canvas" aria-label="Folkified image"></canvas>
+    </div>
+    <p class="roll-label" id="rollLabel"></p>
+
+    <div class="controls">
+      <div class="buttons">
+        <button id="rerollBtn" class="btn btn-primary" type="button">RE-ROLL 🎲</button>
+        <button id="downloadBtn" class="btn" type="button">Download 💾</button>
+        <button id="copyBtn" class="btn" type="button">Copy 📋</button>
+        <button id="newBtn" class="btn btn-ghost" type="button">New image 🔁</button>
+      </div>
+
+      <div class="sliders">
+        <label class="slider">
+          <span class="slider-label">Emoji infestation <output id="densityOut">normal</output></span>
+          <input type="range" id="density" min="0.25" max="3" step="0.05" value="1" />
+        </label>
+        <label class="slider">
+          <span class="slider-label">Folk size <output id="textOut">100%</output></span>
+          <input type="range" id="textScale" min="0.4" max="2" step="0.05" value="1" />
+        </label>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="foot">
+  <p>Everything happens in your browser. Nothing is uploaded anywhere.</p>
+  <p><a href="https://knowyourmeme.com/memes/folk-%F0%9F%98%AD" target="_blank" rel="noopener noreferrer">what is Folk 😭</a></p>
+</footer>
+
+<script src="app.js"></script>
+</body>
+</html>
