@@ -34,11 +34,15 @@ python3 -m http.server 8000
 
 ## Deploying to GitHub Pages
 
-Merge this branch into `main`, then in the repo:
-**Settings → Pages → Build and deployment → Source: Deploy from a branch →
-`main` / `(root)` → Save**.
+`.github/workflows/pages.yml` publishes the repo root to Pages on every push
+to `main`.
 
-The site will be live at `https://<user>.github.io/folkify/` after a minute.
+It needs Pages pointed at Actions once, by hand — a workflow's `GITHUB_TOKEN`
+is not allowed to create a Pages site itself:
+**Settings → Pages → Build and deployment → Source: GitHub Actions**.
+
+After that, re-run the workflow (Actions → Deploy to GitHub Pages → Re-run
+jobs) and the site goes live at `https://<user>.github.io/folkify/`.
 
 ## Files
 
