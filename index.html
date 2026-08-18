@@ -45,12 +45,20 @@
 
       <div class="sliders">
         <label class="slider">
-          <span class="slider-label">Emoji infestation <output id="densityOut">normal</output></span>
-          <input type="range" id="density" min="0" max="1" step="0.01" value="0.5" />
+          <span class="slider-label">Folk position <output id="positionOut">bottom</output></span>
+          <input type="range" id="position" min="0" max="2" step="1" value="2" />
         </label>
         <label class="slider">
           <span class="slider-label">Folk size <output id="textOut">100%</output></span>
           <input type="range" id="textScale" min="0.4" max="2" step="0.05" value="1" />
+        </label>
+        <label class="slider">
+          <span class="slider-label">How many emojis <output id="countOut">0</output></span>
+          <input type="range" id="count" min="0" max="1" step="0.01" value="0.5" />
+        </label>
+        <label class="slider">
+          <span class="slider-label">How random <output id="weirdOut">mixed</output></span>
+          <input type="range" id="weird" min="0" max="1" step="0.01" value="0.5" />
         </label>
       </div>
     </div>

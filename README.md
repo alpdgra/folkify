@@ -8,19 +8,18 @@ Based on the [Folk 😭](https://knowyourmeme.com/memes/folk-%F0%9F%98%AD) meme.
 ## What it does
 
 - Drop, browse, or paste an image (nothing is uploaded — it all runs in your browser)
-- Picks one of six layouts at random each roll:
-  - **bottom band** — Folk over one or more rows of emojis along the bottom
-  - **top banner** — a solid banner with Folk and an emoji row inside it
-  - **emoji wall** — the whole image tiled with emojis, Folk huge on top
-  - **sticker chaos** — emojis flung everywhere at random sizes and angles
-  - **sandwich** — emoji rows top and bottom, Folk in the middle
-  - **halo** — a ring of emojis orbiting Folk
-- Emojis are ~1/3 😭 and ~2/3 whatever cursed thing the pool coughs up
-  (🫀 🪱 🚽 🩻 🪳 🏺 🧌 …)
-- `RE-ROLL 🎲` (or the spacebar) reshuffles the layout, the emojis, and the
+- Lays out the meme the same way every time: the word **Folk**, then emojis
+  running on from it and wrapping into full-width rows underneath. Placement is
+  fixed — only the emojis themselves are random
+- Four controls, all re-rendering the *same* roll so you can tune without
+  losing the one you liked:
+  - **Folk position** — top, middle, or bottom
+  - **Folk size** — scales the word
+  - **How many emojis** — from one up to however many fill the frame
+  - **How random** — `pure 😭` at one end, `unhinged` at the other, with the
+    cursed pool (🫀 🪱 🚽 🩻 🪳 🏺 🧌 …) mixed in as you turn it up
+- `RE-ROLL 🎲` (or the spacebar) reshuffles which emojis get picked and the
   casing of the word
-- Two sliders: emoji infestation and Folk size. Both re-render the *same* roll,
-  so you can tune without losing the one you liked
 - Download as PNG or copy straight to the clipboard
 
 ## Running it locally
@@ -50,4 +49,4 @@ jobs) and the site goes live at `https://<user>.github.io/folkify/`.
 | --- | --- |
 | `index.html` | Markup |
 | `styles.css` | Styling |
-| `app.js` | Emoji pools, layout presets, canvas rendering |
+| `app.js` | Emoji pools, layout, canvas rendering |
