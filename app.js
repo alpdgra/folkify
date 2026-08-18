@@ -191,9 +191,9 @@ function bar(ctx, x, y, w, h, color) {
  * ------------------------------------------------------------------ */
 
 function bottomBand(ctx, rng, S) {
-  const { W, H, T, density, textScale } = S;
-  const size = T * 0.085;
-  const rows = clamp(Math.round(rint(rng, 1, 3) * density), 1, 7);
+  const { W, H, T, amount, textScale } = S;
+  const size = T * (0.105 - amount * 0.025);
+  const rows = 1 + (rng() < amount * 0.4 ? 1 : 0);
   const bandH = Math.min(H * 0.5, rows * size * 0.92 + size * 0.58);
   const top = H - bandH;
 
@@ -213,7 +213,7 @@ function bottomBand(ctx, rng, S) {
 }
 
 function topBanner(ctx, rng, S) {
-  const { W, H, T, density, textScale } = S;
+  const { W, H, T, amount, textScale } = S;
   const light = rng() < 0.65;
   const bannerH = Math.min(H * 0.45, T * 0.3);
   bar(ctx, 0, 0, W, bannerH, light ? "#fff" : "#000");
@@ -225,31 +225,34 @@ function topBanner(ctx, rng, S) {
     fill: light ? "#000" : "#fff", stroke: "none", shadow: false
   });
 
-  const rowSize = bannerH * 0.32;
+  const rowSize = bannerH * (0.38 - amount * 0.07);
   emojiRow(ctx, rng, { y: bannerH * 0.72, size: rowSize, width: W, rot: 0.18 });
 
-  // Overflow the banner with extra rows when the slider is cranked.
-  const extra = clamp(Math.round((density - 1) * 2), 0, 4);
-  for (let i = 0; i < extra; i++) {
-    emojiRow(ctx, rng, { y: bannerH + rowSize * (0.6 + i * 0.9), size: rowSize, width: W });
+  // Spill out of the banner only at the top of the slider.
+  if (rng() < amount * 0.4) {
+    emojiRow(ctx, rng, { y: bannerH + rowSize * 0.6, size: rowSize, width: W });
   }
-  if (rng() < 0.5) {
+  if (rng() < amount * 0.6) {
     emojiRow(ctx, rng, { y: H - rowSize * 0.75, size: rowSize, width: W });
   }
 }
 
 function emojiWall(ctx, rng, S) {
-  const { W, H, T, density, textScale } = S;
+  const { W, H, T, amount, textScale } = S;
   ctx.save();
   ctx.fillStyle = "rgba(0,0,0,0.18)";
   ctx.fillRect(0, 0, W, H);
   ctx.restore();
 
-  const cell = clamp(T * 0.115 / Math.sqrt(density), T * 0.045, T * 0.3);
+  // Thin the wall by leaving cells empty rather than by growing the emojis —
+  // scaling them up just hides the photo behind fewer, bigger faces.
+  const cell = T * (0.31 - amount * 0.08);
+  const fill = 0.2 + amount * 0.8;
   const cols = Math.ceil(W / cell) + 1;
   const rows = Math.ceil(H / cell) + 1;
   for (let r = 0; r < rows; r++) {
     for (let c = 0; c < cols; c++) {
+      if (rng() > fill) continue;
       const x = c * cell + cell / 2 + (rng() - 0.5) * cell * 0.2;
       const y = r * cell + cell / 2 + (rng() - 0.5) * cell * 0.2;
       drawEmoji(ctx, pickEmoji(rng), x, y, cell * rnd(rng, 0.85, 1.05), (rng() - 0.5) * 0.25);
@@ -265,8 +268,8 @@ function emojiWall(ctx, rng, S) {
 }
 
 function scatter(ctx, rng, S) {
-  const { W, H, T, density, textScale } = S;
-  const total = Math.round(clamp(20 * density * rnd(rng, 0.7, 1.4) * (W * H) / (T * T), 4, 400));
+  const { W, H, T, amount, textScale } = S;
+  const total = Math.round(clamp((2 + amount * 5) * rnd(rng, 0.7, 1.4) * (W * H) / (T * T), 2, 400));
   const under = Math.round(total * 0.7);
 
   const sticker = () => {
@@ -289,10 +292,10 @@ function scatter(ctx, rng, S) {
 }
 
 function sandwich(ctx, rng, S) {
-  const { W, H, T, density, textScale } = S;
-  const size = T * 0.09;
-  const topRows = clamp(Math.round(rint(rng, 1, 2) * density), 1, 5);
-  const botRows = clamp(Math.round(rint(rng, 1, 2) * density), 1, 5);
+  const { W, H, T, amount, textScale } = S;
+  const size = T * (0.11 - amount * 0.025);
+  const topRows = 1 + (rng() < amount * 0.4 ? 1 : 0);
+  const botRows = 1 + (rng() < amount * 0.4 ? 1 : 0);
   const opaque = rng() < 0.55;
 
   const topH = Math.min(H * 0.35, topRows * size * 0.92 + size * 0.58);
@@ -314,10 +317,10 @@ function sandwich(ctx, rng, S) {
 }
 
 function halo(ctx, rng, S) {
-  const { W, H, T, density, textScale } = S;
+  const { W, H, T, amount, textScale } = S;
   const cx = W / 2;
   const cy = H * rnd(rng, 0.45, 0.55);
-  const rings = clamp(Math.round(density * rint(rng, 1, 2)), 1, 4);
+  const rings = 1 + (rng() < amount * 0.35 ? 1 : 0);
   const radial = rng() < 0.5;
   const size0 = T * 0.095;
 
@@ -328,7 +331,7 @@ function halo(ctx, rng, S) {
     if (Math.min(rx, ry) < size0 * 0.7) break;
     // Scale the ring population with its circumference so wide or tall
     // frames get a full orbit instead of a handful of lonely emojis.
-    const count = clamp(Math.round(Math.PI * (rx + ry) / (size0 * 1.6) * (0.85 + density * 0.15)), 6, 120);
+    const count = clamp(Math.round(Math.PI * (rx + ry) / (size0 * 1.6) * (0.45 + amount * 0.6)), 5, 120);
     const spin = rng() * Math.PI * 2;
     for (let i = 0; i < count; i++) {
       const a = spin + (i / count) * Math.PI * 2 + (rng() - 0.5) * 0.12;
@@ -363,7 +366,7 @@ const MAX_DIM = 1600;
 const state = {
   img: null,
   seed: (Math.random() * 1e9) | 0,
-  density: 1,
+  amount: 0.5,
   textScale: 1,
   layout: ""
 };
@@ -395,14 +398,14 @@ function render() {
   const S = {
     W, H,
     T: shortSide * 0.75 + Math.sqrt(W * H) * 0.25,
-    density: state.density,
+    amount: state.amount,
     textScale: state.textScale
   };
   draw(ctx, rng, S);
 
   // Corner spam, because sometimes it needs a little more.
-  if (rng() < 0.45) {
-    const n = rint(rng, 2, 5);
+  if (rng() < 0.1 + state.amount * 0.3) {
+    const n = rint(rng, 1, 4);
     for (let i = 0; i < n; i++) {
       const size = S.T * rnd(rng, 0.08, 0.16);
       const corner = rint(rng, 0, 3);
@@ -499,17 +502,17 @@ const densityInput = $("density");
 const textInput = $("textScale");
 
 function densityWord(v) {
-  if (v < 0.5) return "restrained";
-  if (v < 0.9) return "mild";
-  if (v <= 1.15) return "normal";
-  if (v < 1.8) return "a lot";
-  if (v < 2.5) return "unwell";
+  if (v < 0.1) return "barely";
+  if (v < 0.3) return "restrained";
+  if (v < 0.6) return "normal";
+  if (v < 0.8) return "a lot";
+  if (v < 0.95) return "unwell";
   return "biblical";
 }
 
 densityInput.addEventListener("input", () => {
-  state.density = parseFloat(densityInput.value);
-  $("densityOut").textContent = densityWord(state.density);
+  state.amount = parseFloat(densityInput.value);
+  $("densityOut").textContent = densityWord(state.amount);
   render();
 });
 
